@@ -2,7 +2,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 distance_parallel(FirstPoint, SecondPoint) ->
-    dimensions(FirstPoint, SecondPoint),
+    parallelize_dimensions(FirstPoint, SecondPoint),
     Squares = collect(length(FirstPoint)),
     math:sqrt(lists:sum(Squares)).
 
@@ -15,13 +15,13 @@ collect(N, SquaresAccumulator) ->
     end,
     collect(N - 1, lists:append(SquaresAccumulator, [Result])).
 
-dimensions([], []) -> ok;
-dimensions([HeadFirst|TailFirst], [HeadSecond|TailSecond]) ->
+parallelize_dimensions([], []) -> ok;
+parallelize_dimensions([HeadFirst|TailFirst], [HeadSecond|TailSecond]) ->
     Pid = self(),
-    spawn(fun() -> dimension(HeadFirst, HeadSecond, Pid) end),
+    spawn(fun() -> difference_squared(HeadFirst, HeadSecond, Pid) end),
     dimensions(TailFirst, TailSecond).
 
-dimension(X1, X2, Destination) ->
+difference_squared(X1, X2, Destination) ->
     Difference = X1 - X2,
     Result = math:pow(Difference, 2),
     Destination ! {dimension, Result}.
