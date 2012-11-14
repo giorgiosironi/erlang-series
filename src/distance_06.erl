@@ -19,7 +19,7 @@ parallelize_dimensions([], []) -> ok;
 parallelize_dimensions([HeadFirst|TailFirst], [HeadSecond|TailSecond]) ->
     Pid = self(),
     spawn(fun() -> difference_squared(HeadFirst, HeadSecond, Pid) end),
-    dimensions(TailFirst, TailSecond).
+    parallelize_dimensions(TailFirst, TailSecond).
 
 difference_squared(X1, X2, Destination) ->
     Difference = X1 - X2,
