@@ -1,9 +1,9 @@
--module(fail_07).
+-module(fail_08).
 -include_lib("eunit/include/eunit.hrl").
 -export([parent/0, child/2]).
 
 happy_path_test() ->
-    Server = spawn(fail_07, parent, []),
+    Server = spawn(fail_08, parent, []),
     Server ! {divide, 2, self()},
     receive
         {result, Result} -> Result
@@ -11,7 +11,7 @@ happy_path_test() ->
     ?assertEqual(21, Result).
 
 divide_by_zero_test() ->
-    Server = spawn(fail_07, parent, []),
+    Server = spawn(fail_08, parent, []),
     Server ! {divide, 0, self()},
     Status = receive
         {result, _} -> ok
@@ -30,7 +30,7 @@ parent() ->
 parent_loop() ->
     receive
         {'EXIT', _Pid, {ErrorCode, _}} -> ErrorCode;
-        {divide, Divisor, AnswerTo} -> spawn_link(fail_07, child, [Divisor, AnswerTo]);
+        {divide, Divisor, AnswerTo} -> spawn_link(fail_08, child, [Divisor, AnswerTo]);
         {ping, AnswerTo} -> AnswerTo ! {pong, self()}
     end,
     parent_loop().
