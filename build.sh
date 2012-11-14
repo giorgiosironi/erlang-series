@@ -2,4 +2,5 @@
 mkdir bin
 erl -make
 cd bin
+rm bin/*
 erl -noshell -eval 'eunit:test([{dir, "."}], [verbose])' -s init stop
